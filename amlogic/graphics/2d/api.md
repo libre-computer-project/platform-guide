@@ -176,4 +176,5 @@ element boundaries (GStreamer 1.26+).
 
 - [V4L2 M2M API overview](https://docs.kernel.org/userspace-api/media/v4l/dev-mem2mem.html)
 - [Pixel formats](https://docs.kernel.org/userspace-api/media/v4l/pixfmt.html)
-- [MESON deep-color formats](https://docs.kernel.org/userspace-api/media/v4l/pixfmt-meson-deep-color.html)
+- MESON deep-color formats: kernel source
+  `Documentation/userspace-api/media/v4l/pixfmt-meson-deep-color.rst`

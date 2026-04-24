@@ -75,9 +75,8 @@ On A311D (G12B) and S905D3 (SM1): the MESON deep-color formats
 and scale preserve the extra precision; memory stores the top 8
 bits of each component. S805X and S905X do not support deep color.
 
-See the upstream kernel documentation at
-[pixfmt-meson-deep-color.rst](https://docs.kernel.org/userspace-api/media/v4l/pixfmt-meson-deep-color.html)
-for byte-layout details.
+Byte-layout details are in the kernel's
+`Documentation/userspace-api/media/v4l/pixfmt-meson-deep-color.rst`.
 
 ### Indexed palette (CLUT8)
 
