@@ -31,8 +31,8 @@ module.
 | AML-S905X-CC-V2 | Sweet Potato | S905X | 1 / 2 GB |
 | AML-S905X-CC-V3 | Das Potato | S905X | 2 GB |
 | AML-S805X-AC | La Frite | S805X | 512 MB / 1 GB |
-| AML-S805X-AC-V2 | Das Frite | S805X | 1 GB |
-| AML-S905D-PC | Tartiflette | S905D | 2 GB |
+| AML-S805X-AC-V2 | Das Frite | S805X | 512 MB / 1 GB |
+| AML-S905D-PC | Tartiflette | S905D | 2 GB / 3 GB |
 
 Mali-450 also exists on the S912 (octa-A53) but is not present on any
 shipping Libre Computer board.
