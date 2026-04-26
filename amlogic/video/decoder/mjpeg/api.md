@@ -110,6 +110,38 @@ gst-launch-1.0 \
     ! filesink location=output.i420
 ```
 
+### FFmpeg
+
+```sh
+ffmpeg -c:v mjpeg_v4l2m2m -i input.mjpeg -f null -
+```
+
+### libva (VA-API)
+
+The Amlogic V4L2 m2m MJPEG decoder is also available through the
+`libva-v4l2-m2m` backend, exposed as `VAProfileJPEGBaseline`.
+Set:
+
+```sh
+export LIBVA_DRIVER_NAME=v4l2_m2m
+ffmpeg -hwaccel vaapi -hwaccel_device /dev/dri/renderD128 \
+    -hwaccel_output_format vaapi -i input.mjpeg \
+    -vf 'hwdownload,format=nv12' -pix_fmt nv12 \
+    -f rawvideo output.yuv
+```
+
+The libva backend reconstructs the JPEG bitstream from VA buffer
+parameters, routes the session to the dedicated MJPEG V4L2 node,
+and forces 3-plane I420 on the CAPTURE queue.  Decoded frames are
+returned through the standard VAAPI surface flow; userspace can
+either `vaDeriveImage` to read NV12 (libva does the I420->NV12
+conversion in `hwdownload`) or `vaExportSurfaceHandle` to obtain a
+DMA-BUF for downstream consumers.
+
+If the input bitstream is not 4:2:0, the kernel rejects it at
+queue stage and libva propagates the error to the application
+immediately (no firmware stall).
+
 ### Single JPEG still image
 
 The same V4L2 device decodes one-shot JPEG still images.  Feed a
