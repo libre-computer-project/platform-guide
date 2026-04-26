@@ -35,15 +35,17 @@ userspace as a standard V4L2 stateful memory-to-memory decoder at
 
 | SoC | Max width | Max height | Notes |
 |-----|-----------|------------|-------|
-| S805X | 1920 px | 1080 px | Limited by 128 MB CMA pool |
+| S805X | 1920 px | 1080 px | Limited by 128/256 MB CMA pool |
 | S905X | 1920 px | 1080 px | Limited by 256 MB CMA pool |
 | S905D | 1920 px | 1080 px | Limited by 256 MB CMA pool |
-| A311D | 5120 px | 2880 px | 5K (5120x2880); 4K+ requires 4 GB RAM (980 MB CMA) |
-| S905D3 | 5120 px | 2880 px | 5K (5120x2880); 4K+ requires 4 GB RAM (980 MB CMA) |
+| A311D | 7680 px | 4320 px | Full range through 8K on 4 GB SKUs (980 MB CMA) |
+| S905D3 | 7680 px | 4320 px | Full range through 8K on 4 GB SKUs (980 MB CMA) |
 
-6K and 8K Profile 0 streams are accepted by the firmware but require a
-CMA pool larger than 980 MB to allocate the per-frame workspace -- they
-fail with `-ENOMEM` on stock 4 GB boards.
+A311D and S905D3 decode every standard tier from QVGA (320x240)
+through 8K UHD (7680x4320).  5K (5120x2880) through 8K
+(7680x4320) require the scatter-gather AFBC body allocator
+(`meson_vdec_core.fbc_sg=Y`, default on) to fit the workspace
+into the 980 MB CMA pool that ships on 4 GB boards.
 
 `VIDIOC_ENUM_FRAMESIZES` reports the SoC-specific upper bound; the
 driver computes it at probe time from the available CMA pool.

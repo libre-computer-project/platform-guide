@@ -5,6 +5,29 @@ at maximum supported VDEC frequency (667 MHz).  Source: MJPEG
 quality 2 streams generated with `ffmpeg ... -pix_fmt yuvj420p
 -c:v mjpeg -q:v 2`, second pass after warmup.
 
+## Resolution coverage
+
+Frame delivery validated on each supported SoC across the standard
+resolution tiers, with substitutions where the firmware
+max_height = 2048 ceiling cuts in:
+
+| Resolution | S805X / S905X / S905D | A311D / S905D3 |
+|------------|----------------------|----------------|
+| 320x240 | 30/30 | 30/30 |
+| 720x480 | 30/30 | 30/30 |
+| 1280x720 | 90/90 | 90/90 |
+| 1920x1080 | 30/30 | 30/30 |
+| 2560x1440 | 30/30 | 30/30 |
+| 3840x2048 (4K UHD letterbox) | 5/5 | 5/5 |
+| 4096x2048 (DCI 4K letterbox) | 5/5 | 5/5 |
+| 8192x2048 (16.7 MP ceiling) | 5/5 | 5/5 |
+
+The firmware caps each axis at 8192 x 2048 px; 3840x2160 / 4096x2160
+height-2160 4K rows are not advertised (driver clamps via
+`VIDIOC_ENUM_FRAMESIZES` to height 2048).  The 8192x2048
+ceiling row covers both wide-letterbox 4K equivalents and the
+maximum panorama format.
+
 ## Throughput
 
 | SoC | 320x240 | 1280x720 | 1920x1080 | 2560x1440 | 8192x2048 |
@@ -59,9 +82,12 @@ Per-session CMA allocation, peak during steady-state decode:
 | Resolution | Peak CMA | Notes |
 |------------|----------|-------|
 | 320x240 | ~3 MB | I420 capture, 8-buffer DPB |
+| 720x480 | ~7 MB | |
 | 1280x720 | ~14 MB | |
 | 1920x1080 | ~30 MB | |
 | 2560x1440 | ~52 MB | |
+| 3840x2048 | ~96 MB | 4K UHD letterbox |
+| 4096x2048 | ~102 MB | DCI 4K letterbox |
 | 8192x2048 | ~125 MB | A 16.7 MP I420 frame is ~25 MB |
 
 128 MB CMA (S805X 512 MB DDR boards) is sufficient for every
