@@ -129,6 +129,22 @@ ffmpeg -c:v mpeg2_v4l2m2m -i input.mpg \
     -f rawvideo -pix_fmt nv12 output.nv12
 ```
 
+### libva (VA-API)
+
+The Amlogic V4L2 m2m decoder is also reachable through the
+`libva-v4l2-m2m` backend.  Set:
+
+```sh
+export LIBVA_DRIVER_NAME=v4l2_m2m
+ffmpeg -hwaccel vaapi -hwaccel_output_format vaapi -i input.mpg \
+    -vf 'hwdownload,format=nv12' -pix_fmt nv12 -f rawvideo output.yuv
+```
+
+VA-API exposes both `VAProfileMPEG2Simple` and `VAProfileMPEG2Main`
+profiles.  MPEG-1 streams decode through the MPEG-2 path (the
+firmware accepts MPEG-1 elementary streams unchanged); the libva
+backend does not advertise a separate MPEG-1 profile.
+
 ### Minimal V4L2 decode loop
 
 A complete C example is out of scope here; refer to the upstream
