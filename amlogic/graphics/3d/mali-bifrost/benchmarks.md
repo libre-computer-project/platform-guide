@@ -90,9 +90,12 @@ single shared SoC voltage rail and held 800 MHz throughout the
 | Alta (G52, A311D) | dEQP-GLES2 functional | 16957 | 48 | 156 | 17165 | 98.8% |
 
 Pass-rate among graded tests (PASS / (PASS+FAIL)): **99.7%**.
-The 48 failures are split between shader-scoping edge cases and
-texture-format minutiae documented upstream as known
-non-conformances on Bifrost; no driver-stability failures.
+
+The 48 current failures are concentrated in one feature:
+`texture.mipmap.{2d,cube}.generate.*` (32 2D × 8 formats × 4 modes
+plus 16 cube × 8 formats × 2 modes). `glGenerateMipmap` is being
+investigated upstream; the rest of the GLES 2.0 surface is at
+99.7% pass. No driver-stability failures, no GPU resets.
 
 The Solitude (G31) dEQP-GLES2 path requires a Wayland-headless EGL
 context (the surfaceless pbuffer path returns ENOMEM from BO
