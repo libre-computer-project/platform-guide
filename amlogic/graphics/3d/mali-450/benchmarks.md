@@ -83,21 +83,33 @@ rate.
 
 #### S805X die `0a153ae40ad2`:
 
-| Shader | 666 MHz |
-|--------|--------:|
-| passthrough | 304.6 |
-| ALU light | 214.8 |
-| ALU medium | 129.4 |
-| ALU heavy | 35.8 |
-| trig | 192.5 |
-| trig heavy | 62.9 |
-| branching | 150.0 |
-| uniform heavy | 109.0 |
+| Shader | 666 MHz | "672"* | "684"* | "696"* | "708"* |
+|--------|--------:|-------:|-------:|-------:|-------:|
+| passthrough | 296.2 | 299.0 | 294.6 | 298.6 | 289.3 |
+| ALU light | 213.7 | 214.0 | 213.4 | 214.6 | 214.5 |
+| ALU medium | 125.6 | 129.2 | 130.0 | 131.4 | 131.0 |
+| ALU heavy | 35.7 | 35.7 | 35.7 | 35.8 | 35.7 |
+| trig | 192.3 | 192.7 | 192.2 | 193.0 | 192.2 |
+| trig heavy | 62.9 | 62.8 | 62.7 | 62.9 | 62.8 |
+| branching | 148.6 | 149.8 | 149.1 | 148.3 | 149.7 |
+| uniform heavy | 108.3 | 108.9 | 108.6 | 108.6 | 108.8 |
 
-OC rates pending: this die hard-panics on the OD=1 path at 720 MHz
-under light load; under shader-bound load the threshold may be even
-lower. Will fill in OC columns after the board's run through the
-full battery (currently offline, awaiting power-cycle).
+\* The "OC" columns are misleading. PLL locks at the target, pre-test
+mali HW measure shows the target rate (671, 683, 695, 707 MHz), but
+during the benchmark the lima driver silently scales mali back to
+666 MHz, with no dmesg trace and well below the 80°C thermal trip.
+**All "OC" columns are effectively at 666 MHz** — shader throughput
+is identical to the 666 baseline within ±2% noise, and the post-test
+HW measure confirms `mali=666 MHz` at every rate.
+
+Above 708 MHz (720+), the lima soft scale-down apparently doesn't
+fire fast enough and the GPU panics with **SError 0x96000210** at
+`lima_l2_cache_flush`. So on this die there is no useful OC
+operating point: lower rates are silently scaled back, and higher
+rates panic.
+
+This is why the S805X default cap is 666 MHz on the fclk_div3 path
+— it avoids both classes of failure.
 
 > **Note on prior published tables.** A previous version of this
 > page carried a shader-throughput table with shaders named
