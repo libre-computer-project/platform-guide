@@ -17,8 +17,8 @@ module.
 | Configuration | 1 Geometry Processor (GP) + 3 Pixel Processors (PP) |
 | Marketing name | Mali-450 MP3 |
 | Process | 28 nm |
-| Default clock | 666 MHz (S905X), 500 MHz (S805X stock DVFS top) |
-| Max validated clock | 1584 MHz (overclocked, see [benchmarks.md](benchmarks.md)) |
+| Default GPU clock (S905X) | 744 MHz (M=62, OD=1, GP0_PLL DCO=1488) |
+| Default GPU clock (S805X) | 666 MHz (fclk_div3, fixed-divider, no PLL) |
 | API | OpenGL ES 2.0, OpenGL 2.1 (compatibility profile via Mesa st/mesa) |
 | User-space stack | Mesa Lima Gallium driver, EGL, GBM |
 | Kernel driver | `lima` (mainline, `drivers/gpu/drm/lima/`) |
@@ -55,17 +55,13 @@ shipping Libre Computer board.
 - Headless rendering (no display required) via EGL surfaceless or
   `eglGetPlatformDisplay(EGL_PLATFORM_GBM_KHR)` on `/dev/dri/renderD128`
 
-## What it cannot do (silicon limits)
+## Architecture scope
 
-- OpenGL ES 3.0 / 3.1 / 3.2 -- requires geometry shaders, transform
-  feedback, compute shaders that the Utgard pipeline does not implement
-- Vulkan -- there is no Vulkan driver targeting Utgard
-- ASTC compressed textures (Bifrost-only)
-- HW MSAA resolve (no resolve unit; multi-sample resolve is a limitation
-  of the design rather than a driver gap)
-- Stencil INCR / DECR / WRAP arithmetic ops on d24s8 -- partially
-  functional in silicon; passes core stencil but fails specific dEQP
-  ops sub-tests. Stencil compare and replace work correctly.
+Mali-450 implements the Utgard ISA. For workloads requiring features
+outside this scope -- OpenGL ES 3.0 / 3.1 / 3.2, Vulkan, geometry
+shaders, transform feedback, compute shaders, ASTC compressed
+textures, or HW MSAA resolve -- choose a Bifrost board (Mali-G31 on
+the SM1 family, Mali-G52 on the G12B family).
 
 ## Use cases
 
